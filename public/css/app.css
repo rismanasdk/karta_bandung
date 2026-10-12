@@ -1,0 +1,122 @@
+:root {
+    --bs-primary: #0a1628;
+    --navy: #0a1628;
+    --navy-light: #112240;
+    --green-field: #1a9b52;
+    --green-light: #22c55e;
+}
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Oswald:wght@400;500;600;700&display=swap');
+
+body { font-family: 'Inter', sans-serif; }
+h1,h2,h3,.oswald { font-family: 'Oswald', sans-serif; }
+
+/* ── NAVBAR ── */
+.navbar-karta { background: transparent; transition: background 0.3s; padding: 10px 0; position: fixed; top: 0; width: 100%; z-index: 1050; }
+.navbar-karta.scrolled { background: #0a1628 !important; box-shadow: 0 2px 20px rgba(0,0,0,0.4); }
+.navbar-karta .navbar-brand { font-family: 'Oswald', sans-serif; color: #fff !important; font-size: 1.1rem; line-height: 1.1; }
+.navbar-karta .nav-link { color: rgba(255,255,255,0.85) !important; font-size: 0.875rem; font-weight: 500; padding: 6px 14px !important; border-radius: 6px; transition: all 0.2s; }
+.navbar-karta .nav-link:hover, .navbar-karta .nav-link.active { color: #fff !important; background: rgba(255,255,255,0.1); }
+.navbar-karta .navbar-toggler { border-color: rgba(255,255,255,0.4); }
+.navbar-karta .navbar-toggler-icon { filter: invert(1); }
+
+/* ── HERO ── */
+.hero-section { min-height: 100vh; background: linear-gradient(135deg, rgba(10,22,40,0.93) 0%, rgba(10,22,40,0.75) 60%, rgba(10,22,40,0.9) 100%), url('https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=1920&q=80') center/cover no-repeat; display: flex; align-items: center; padding-top: 80px; }
+.hero-overline { display: inline-flex; align-items: center; gap: 8px; background: rgba(26,155,82,0.15); border: 1px solid rgba(26,155,82,0.4); color: #4ade80; padding: 6px 16px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 20px; }
+.hero-section h1 { color: #fff; text-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+.hero-section h1 span { color: #4ade80; }
+.hero-stat-value { font-family: 'Oswald', sans-serif; font-size: 2rem; font-weight: 700; color: #fff; }
+.hero-stat-label { font-size: 0.72rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* ── SECTIONS ── */
+.section-overline { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #1a9b52; }
+
+/* ── STAT CARDS ── */
+.stat-card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s; border-top: 4px solid; }
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+.stat-card .stat-value { font-size: 2.2rem; font-weight: 800; line-height: 1; }
+
+/* ── MATCH CARD ── */
+.match-card { border: 1px solid #e9ecef; border-radius: 12px; padding: 20px; transition: box-shadow 0.2s, transform 0.2s; }
+.match-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.1); transform: translateY(-2px); }
+.match-score { font-family: 'Oswald', sans-serif; font-size: 1.8rem; font-weight: 700; background: #f1f5f9; padding: 8px 16px; border-radius: 8px; min-width: 80px; text-align: center; }
+.match-stage-badge { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* ── SIDEBAR ADMIN ── */
+.admin-sidebar { width: 255px; min-height: 100vh; background: #0a1628; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+.admin-sidebar .sidebar-logo { padding: 20px 18px; border-bottom: 1px solid rgba(255,255,255,0.1); font-family: 'Oswald', sans-serif; font-weight: 700; color: #fff; font-size: 1rem; }
+.admin-sidebar .sidebar-logo small { display: block; font-family: 'Inter', sans-serif; font-size: 0.65rem; color: rgba(255,255,255,0.4); font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
+.admin-sidebar .nav-section { padding: 14px 18px 4px; font-size: 0.62rem; font-weight: 700; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.12em; }
+.admin-sidebar .nav-link { color: rgba(255,255,255,0.65); padding: 10px 18px; font-size: 0.85rem; display: flex; align-items: center; gap: 10px; border-left: 3px solid transparent; transition: all 0.2s; border-radius: 0; }
+.admin-sidebar .nav-link:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.admin-sidebar .nav-link.active { color: #fff; background: rgba(26,155,82,0.18); border-left-color: #1a9b52; }
+.admin-sidebar .nav-link i { width: 18px; font-size: 0.9rem; }
+.sidebar-bottom { padding: 14px; border-top: 1px solid rgba(255,255,255,0.1); }
+
+/* ── TOPBAR ── */
+.admin-topbar { background: #fff; border-bottom: 1px solid #e9ecef; padding: 12px 24px; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.admin-avatar { width: 36px; height: 36px; border-radius: 50%; background: #0a1628; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
+
+/* ── STATUS BADGES ── */
+.badge-status { padding: 4px 12px; border-radius: 50px; font-size: 0.72rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; }
+.badge-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+.status-menunggu { background: #fef3c7; color: #92400e; }
+.status-menunggu::before { background: #f59e0b; }
+.status-terverifikasi { background: #dcfce7; color: #15803d; }
+.status-terverifikasi::before { background: #22c55e; }
+.status-ditolak { background: #fee2e2; color: #b91c1c; }
+.status-ditolak::before { background: #ef4444; }
+.status-belum { background: #f1f5f9; color: #64748b; }
+.status-belum::before { background: #94a3b8; }
+
+/* ── UPLOAD AREA ── */
+.upload-area { border: 2px dashed #cbd5e1; border-radius: 10px; padding: 28px; text-align: center; cursor: pointer; transition: all 0.25s; background: #f8fafc; }
+.upload-area:hover { border-color: #1a9b52; background: #f0fdf4; }
+.upload-preview { display: none; margin-top: 10px; border-radius: 8px; overflow: hidden; max-height: 180px; }
+.upload-preview img { width: 100%; height: 180px; object-fit: cover; }
+
+/* ── FOOTER ── */
+.footer-karta { background: #0a1628; color: rgba(255,255,255,0.7); }
+.footer-karta h6 { color: #fff; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+.footer-karta a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+.footer-karta a:hover { color: #4ade80; }
+.social-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: #fff; }
+.social-btn:hover { background: #1a9b52; transform: translateY(-2px); color: #fff; }
+
+/* ── STANDINGS ── */
+.standings-table thead { background: #0a1628; color: #fff; }
+.standings-pos-1 { color: #1a9b52; font-weight: 800; }
+.standings-pos-2 { color: #3b82f6; font-weight: 700; }
+.standings-pos-3 { color: #f59e0b; font-weight: 700; }
+
+/* ── PAGE HEADER (ADMIN) ── */
+.page-header-bar { background: #fff; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; border: 1px solid #e9ecef; }
+
+/* ── CARD SHADOW ── */
+.card-karta { border: 1px solid #e9ecef; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+
+/* ── PESERTA SIDEBAR ── */
+.peserta-sidebar { width: 240px; min-height: 100vh; background: #112240; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+.peserta-sidebar .sidebar-logo { padding: 20px 18px; border-bottom: 1px solid rgba(255,255,255,0.1); font-family: 'Oswald', sans-serif; font-weight: 700; color: #fff; }
+.peserta-sidebar .nav-link { color: rgba(255,255,255,0.65); padding: 10px 18px; font-size: 0.85rem; display: flex; align-items: center; gap: 10px; border-left: 3px solid transparent; transition: all 0.2s; }
+.peserta-sidebar .nav-link:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.peserta-sidebar .nav-link.active { color: #fff; background: rgba(26,155,82,0.18); border-left-color: #1a9b52; }
+.peserta-sidebar .nav-link i { width: 18px; }
+
+/* ── MISC ── */
+.text-green { color: #1a9b52 !important; }
+.bg-navy { background-color: #0a1628 !important; }
+.bg-green-field { background-color: #1a9b52 !important; }
+.btn-green { background-color: #1a9b52; color: #fff; border-color: #1a9b52; }
+.btn-green:hover { background-color: #15803d; border-color: #15803d; color: #fff; }
+.btn-navy { background-color: #0a1628; color: #fff; border-color: #0a1628; }
+.btn-navy:hover { background-color: #112240; border-color: #112240; color: #fff; }
+.border-green { border-color: #1a9b52 !important; }
+.rounded-12 { border-radius: 12px; }
+
+@media (max-width: 768px) {
+    .admin-sidebar, .peserta-sidebar { display: none; position: fixed; z-index: 1050; height: 100vh; overflow-y: auto; }
+    .admin-sidebar.show, .peserta-sidebar.show { display: flex !important; }
+    .match-score { font-size: 1.3rem; padding: 6px 10px; min-width: 60px; }
+}
