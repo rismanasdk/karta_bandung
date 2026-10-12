@@ -21,6 +21,33 @@ h1,h2,h3,.oswald { font-family: 'Oswald', sans-serif; }
 .navbar-karta .navbar-toggler { border-color: rgba(255,255,255,0.4); }
 .navbar-karta .navbar-toggler-icon { filter: invert(1); }
 
+@media (max-width: 991.98px) {
+    .navbar-karta {
+        background: #0a1628;
+    }
+    .navbar-karta .navbar-collapse {
+        background: #0c1a30;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 14px;
+        margin-top: 12px;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+    }
+    .navbar-karta .nav-link {
+        color: #ffffff !important;
+        font-size: 0.95rem;
+        font-weight: 600;
+        padding: 10px 16px !important;
+        margin-bottom: 4px;
+        border-radius: 8px;
+    }
+    .navbar-karta .nav-link:hover,
+    .navbar-karta .nav-link.active {
+        background: rgba(26, 155, 82, 0.3) !important;
+        color: #4ade80 !important;
+    }
+}
+
 /* ── HERO ── */
 .hero-section { min-height: 100vh; background: linear-gradient(135deg, rgba(10,22,40,0.93) 0%, rgba(10,22,40,0.75) 60%, rgba(10,22,40,0.9) 100%), url('https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=1920&q=80') center/cover no-repeat; display: flex; align-items: center; padding-top: 80px; }
 .hero-overline { display: inline-flex; align-items: center; gap: 8px; background: rgba(26,155,82,0.15); border: 1px solid rgba(26,155,82,0.4); color: #4ade80; padding: 6px 16px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 20px; }
@@ -84,8 +111,10 @@ h1,h2,h3,.oswald { font-family: 'Oswald', sans-serif; }
 .social-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: #fff; }
 .social-btn:hover { background: #1a9b52; transform: translateY(-2px); color: #fff; }
 
-/* ── STANDINGS ── */
-.standings-table thead { background: #0a1628; color: #fff; }
+/* ── STANDINGS & TABLES ── */
+.standings-table thead, .standings-table thead th { background-color: #0a1628 !important; color: #fff !important; }
+.table thead tr.standings-table,
+.table thead tr.standings-table th { background-color: #f1f5f9 !important; color: #0a1628 !important; }
 .standings-pos-1 { color: #1a9b52; font-weight: 800; }
 .standings-pos-2 { color: #3b82f6; font-weight: 700; }
 .standings-pos-3 { color: #f59e0b; font-weight: 700; }

@@ -18,7 +18,7 @@
             <p class="text-muted fs-5 mb-4">Turnamen sepak bola bergengsi antar kecamatan se-Kota Bandung yang diselenggarakan untuk mempererat persaudaraan, menemukan bakat lokal, dan mendorong gaya hidup aktif-sportif.</p>
             <div class="d-flex flex-column gap-3">
                 @foreach([
-                    ['icon'=>'fa-trophy','color'=>'#dcfce7','iconColor'=>'#15803d','text'=>'Hadiah utama lebih dari <strong>Rp 75 Juta</strong> + Piala Bergilir bergengsi'],
+                    ['icon'=>'fa-trophy','color'=>'#dcfce7','iconColor'=>'#15803d','text'=>'Total Hadiah Turnamen sebesar <strong>' . ($settings->total_prize ?? 'Rp 50.000.000') . '</strong>'],
                     ['icon'=>'fa-users','color'=>'#dbeafe','iconColor'=>'#1d4ed8','text'=>'Terbuka untuk warga <strong>KTP Kota Bandung</strong> usia 17–45 tahun'],
                     ['icon'=>'fa-futbol','color'=>'#fef3c7','iconColor'=>'#92400e','text'=>'Sistem <strong>Grup + Eliminasi</strong> dengan wasit berlisensi PSSI'],
                 ] as $item)

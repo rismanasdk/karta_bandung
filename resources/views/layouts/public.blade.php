@@ -23,17 +23,15 @@
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('hasil-klasemen') ? 'active' : '' }}" href="{{ route('hasil-klasemen') }}">Klasemen</a></li>
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('berita*') ? 'active' : '' }}" href="{{ route('berita') }}">Pengumuman</a></li>
             </ul>
+            @auth
             <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
-                @guest
-                    <a href="{{ route('login') }}" class="btn btn-green btn-sm px-3 fw-semibold"><i class="fas fa-sign-in-alt me-1"></i> Masuk Akun</a>
+                @if(auth()->user()->isAdmin())
+                    <a href="{{ route('admin.dashboard') }}" class="btn btn-green btn-sm"><i class="fas fa-cog me-1"></i> Panel Admin</a>
                 @else
-                    @if(auth()->user()->isAdmin())
-                        <a href="{{ route('admin.dashboard') }}" class="btn btn-green btn-sm"><i class="fas fa-cog me-1"></i> Panel Admin</a>
-                    @else
-                        <a href="{{ route('peserta.dashboard') }}" class="btn btn-green btn-sm"><i class="fas fa-user me-1"></i> Dashboard Saya</a>
-                    @endif
-                @endguest
+                    <a href="{{ route('peserta.dashboard') }}" class="btn btn-green btn-sm"><i class="fas fa-user me-1"></i> Dashboard Saya</a>
+                @endif
             </div>
+            @endauth
         </div>
     </div>
 </nav>

@@ -42,7 +42,7 @@
                             <label class="form-label fw-semibold small">Lokasi Pertandingan <span class="text-danger">*</span></label>
                             <input type="text" name="location" class="form-control"
                                    value="{{ old('location', $settings->location) }}"
-                                   placeholder="cth: Stadion Siliwangi & GBLA Bandung" required>
+                                   placeholder="cth: Lapangan sepak bola Lodaya Bandung" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold small">Total Hadiah <span class="text-danger">*</span></label>
@@ -50,7 +50,7 @@
                                 <span class="input-group-text"><i class="fas fa-trophy text-warning"></i></span>
                                 <input type="text" name="total_prize" class="form-control"
                                        value="{{ old('total_prize', $settings->total_prize) }}"
-                                       placeholder="cth: Rp 75.000.000 + Piala Bergilir" required>
+                                       placeholder="cth: Rp 50.000.000" required>
                             </div>
                         </div>
                         <div class="col-12">

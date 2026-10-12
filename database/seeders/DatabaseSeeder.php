@@ -55,93 +55,8 @@ class DatabaseSeeder extends Seeder
             $kecamatanUsers[$kec] = $user;
         }
 
-        // 4. Teams (Existing Standing Teams)
-        $teams = [
-            ['name' => 'Antapani', 'kecamatan' => 'Antapani', 'group' => 'Grup A', 'p' => 3, 'w' => 2, 'd' => 1, 'l' => 0, 'gf' => 6, 'ga' => 2, 'gd' => 4, 'pts' => 7],
-            ['name' => 'Coblong', 'kecamatan' => 'Coblong', 'group' => 'Grup A', 'p' => 3, 'w' => 2, 'd' => 0, 'l' => 1, 'gf' => 5, 'ga' => 3, 'gd' => 2, 'pts' => 6],
-            ['name' => 'Lengkong', 'kecamatan' => 'Lengkong', 'group' => 'Grup A', 'p' => 3, 'w' => 1, 'd' => 0, 'l' => 2, 'gf' => 3, 'ga' => 5, 'gd' => -2, 'pts' => 3],
-            ['name' => 'Andir', 'kecamatan' => 'Andir', 'group' => 'Grup A', 'p' => 3, 'w' => 0, 'd' => 1, 'l' => 2, 'gf' => 1, 'ga' => 5, 'gd' => -4, 'pts' => 1],
-
-            ['name' => 'Sukajadi', 'kecamatan' => 'Sukajadi', 'group' => 'Grup B', 'p' => 3, 'w' => 3, 'd' => 0, 'l' => 0, 'gf' => 8, 'ga' => 1, 'gd' => 7, 'pts' => 9],
-            ['name' => 'Arcamanik', 'kecamatan' => 'Arcamanik', 'group' => 'Grup B', 'p' => 3, 'w' => 1, 'd' => 1, 'l' => 1, 'gf' => 4, 'ga' => 4, 'gd' => 0, 'pts' => 4],
-            ['name' => 'Cibeunying Kaler', 'kecamatan' => 'Cibeunying Kaler', 'group' => 'Grup B', 'p' => 3, 'w' => 1, 'd' => 0, 'l' => 2, 'gf' => 3, 'ga' => 6, 'gd' => -3, 'pts' => 3],
-            ['name' => 'Batununggal', 'kecamatan' => 'Batununggal', 'group' => 'Grup B', 'p' => 3, 'w' => 0, 'd' => 1, 'l' => 2, 'gf' => 2, 'ga' => 6, 'gd' => -4, 'pts' => 1],
-        ];
-
-        $teamModels = [];
-        foreach ($teams as $t) {
-            $teamModels[$t['name']] = Team::create([
-                'name' => $t['name'],
-                'kecamatan' => $t['kecamatan'],
-                'group_name' => $t['group'],
-                'played' => $t['p'],
-                'won' => $t['w'],
-                'drawn' => $t['d'],
-                'lost' => $t['l'],
-                'goals_for' => $t['gf'],
-                'goals_against' => $t['ga'],
-                'goal_difference' => $t['gd'],
-                'points' => $t['pts'],
-            ]);
-        }
-
-        // 5. Matches
-        GameMatch::create([
-            'home_team_id' => $teamModels['Antapani']->id,
-            'away_team_id' => $teamModels['Coblong']->id,
-            'match_date' => now()->subDays(4)->setTime(15, 30),
-            'venue' => 'Stadion Siliwangi Bandung',
-            'home_score' => 2,
-            'away_score' => 1,
-            'status' => 'Selesai',
-            'stage' => 'Grup A - Pekan 1',
-        ]);
-
-        GameMatch::create([
-            'home_team_id' => $teamModels['Lengkong']->id,
-            'away_team_id' => $teamModels['Andir']->id,
-            'match_date' => now()->subDays(4)->setTime(19, 00),
-            'venue' => 'Stadion Siliwangi Bandung',
-            'home_score' => 2,
-            'away_score' => 0,
-            'status' => 'Selesai',
-            'stage' => 'Grup A - Pekan 1',
-        ]);
-
-        GameMatch::create([
-            'home_team_id' => $teamModels['Sukajadi']->id,
-            'away_team_id' => $teamModels['Arcamanik']->id,
-            'match_date' => now()->subDays(3)->setTime(15, 30),
-            'venue' => 'Stadion GBLA Bandung',
-            'home_score' => 3,
-            'away_score' => 0,
-            'status' => 'Selesai',
-            'stage' => 'Grup B - Pekan 1',
-        ]);
-
-        // Upcoming Matches
-        GameMatch::create([
-            'home_team_id' => $teamModels['Antapani']->id,
-            'away_team_id' => $teamModels['Sukajadi']->id,
-            'match_date' => now()->addDays(2)->setTime(15, 30),
-            'venue' => 'Stadion Siliwangi Bandung',
-            'home_score' => null,
-            'away_score' => null,
-            'status' => 'Mendatang',
-            'stage' => 'Semi Final 1',
-            'notes' => 'Pertandingan Sengit Perebutan Tiket Final',
-        ]);
-
-        GameMatch::create([
-            'home_team_id' => $teamModels['Coblong']->id,
-            'away_team_id' => $teamModels['Arcamanik']->id,
-            'match_date' => now()->addDays(3)->setTime(19, 00),
-            'venue' => 'Stadion GBLA Bandung',
-            'home_score' => null,
-            'away_score' => null,
-            'status' => 'Mendatang',
-            'stage' => 'Semi Final 2',
-        ]);
+        // 4. Teams & Matches dikosongkan karena data riil belum tersedia
+        // Tim dan jadwal akan dibuat saat pendaftaran/verifikasi atau diinput oleh panitia/admin.
 
         // 6. News & Announcements
         News::create([
@@ -172,7 +87,7 @@ class DatabaseSeeder extends Seeder
             'title' => 'Pendaftaran Terverifikasi',
             'message' => 'Selamat! Berkas pendaftaran Kontingen Antapani telah disetujui oleh Panitia KARTA.BDG.',
             'type' => 'success',
-            'is_read' => false,
+            'is_read' => false, 
         ]);
     }
 }

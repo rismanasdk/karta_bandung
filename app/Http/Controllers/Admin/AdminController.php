@@ -63,6 +63,23 @@ class AdminController extends Controller
         return view('admin.pendaftar', compact('registrations'));
     }
 
+    public function destroyPendaftar($id)
+    {
+        $registration = Registration::with('members')->findOrFail($id);
+        foreach ($registration->members as $m) {
+            if ($m->ktp_path) Storage::disk('public')->delete($m->ktp_path);
+            if ($m->kk_path) Storage::disk('public')->delete($m->kk_path);
+            if ($m->pasfoto_path) Storage::disk('public')->delete($m->pasfoto_path);
+            $m->delete();
+        }
+        if ($registration->surat_rekomendasi_path) {
+            Storage::disk('public')->delete($registration->surat_rekomendasi_path);
+        }
+        $registration->delete();
+
+        return back()->with('success', 'Data pendaftaran berhasil dihapus.');
+    }
+
     // ── VERIFIKASI ────────────────────────────────────────────────
     public function verifikasi(Request $request)
     {

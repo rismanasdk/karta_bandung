@@ -14,8 +14,8 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->string('registration_schedule')->default('10 Oktober 2026 - 31 Oktober 2026');
             $table->string('tournament_dates')->default('10 November 2026 - 05 Desember 2026');
-            $table->string('location')->default('Stadion Siliwangi & GBLA Bandung');
-            $table->string('total_prize')->default('Rp 75.000.000 + Piala Bergilir');
+            $table->string('location')->default('Lapangan sepak bola Lodaya Bandung');
+            $table->string('total_prize')->default('Rp 50.000.000');
             $table->text('rules')->nullable();
             $table->string('registration_status')->default('Buka'); // Buka, Tutup, Segera
             $table->timestamps();

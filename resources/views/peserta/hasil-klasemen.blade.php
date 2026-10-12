@@ -22,7 +22,7 @@
 
 <div class="tab-content">
     <div class="tab-pane fade show active" id="klasemenTab">
-        @foreach($standings as $groupName => $teams)
+        @forelse($standings as $groupName => $teams)
         <div class="card border-0 card-karta mb-4 overflow-hidden">
             <div class="card-header py-3" style="background:#0a1628;">
                 <h6 class="oswald fw-bold mb-0 text-white"><i class="fas fa-layer-group text-success me-2"></i>{{ $groupName }}</h6>
@@ -58,7 +58,13 @@
                 </table>
             </div>
         </div>
-        @endforeach
+        @empty
+        <div class="card border-0 card-karta p-5 text-center text-muted">
+            <i class="fas fa-table fa-3x mb-3 d-block text-muted"></i>
+            <h6 class="fw-bold">Belum Ada Data Klasemen</h6>
+            <p class="small mb-0">Data klasemen akan muncul setelah pertandingan berlangsung.</p>
+        </div>
+        @endforelse
     </div>
 
     <div class="tab-pane fade" id="hasilTab">

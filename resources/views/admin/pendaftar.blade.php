@@ -85,9 +85,18 @@
                         <span class="badge-status status-{{ strtolower(str_replace(' ','',explode(' ',$reg->status)[0])) }}">{{ $reg->status }}</span>
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.verifikasi.detail', $reg->id) }}" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-eye me-1"></i> Lihat Detail
-                        </a>
+                        <div class="d-flex justify-content-center gap-1">
+                            <a href="{{ route('admin.verifikasi.detail', $reg->id) }}" class="btn btn-sm btn-outline-primary" title="Lihat Detail">
+                                <i class="fas fa-eye me-1"></i> Detail
+                            </a>
+                            <form method="POST" action="{{ route('admin.pendaftar.destroy', $reg->id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pendaftaran tim {{ $reg->nama_tim }} ini? Data berkas dan anggota akan dihapus.')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus Pendaftar">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 @empty

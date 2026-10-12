@@ -283,6 +283,18 @@ class PesertaController extends Controller
         return back()->with('success', 'Semua notifikasi telah ditandai sebagai dibaca.');
     }
 
+    public function destroyNotifikasi($id)
+    {
+        Notification::where('user_id', Auth::id())->where('id', $id)->delete();
+        return back()->with('success', 'Notifikasi berhasil dihapus.');
+    }
+
+    public function destroyAllNotifikasi()
+    {
+        Notification::where('user_id', Auth::id())->delete();
+        return back()->with('success', 'Semua notifikasi berhasil dihapus.');
+    }
+
     public function pengaturan()
     {
         $user = Auth::user();

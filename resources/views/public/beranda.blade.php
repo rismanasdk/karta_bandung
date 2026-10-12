@@ -89,11 +89,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3" style="border-top:1px solid rgba(255,255,255,0.1);">
-                            <a href="{{ route('register') }}" class="btn btn-green w-100 fw-bold">
-                                <i class="fas fa-user-plus me-2"></i> Daftar Sekarang — Gratis!
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -111,7 +106,7 @@
         </div>
         <div class="row g-4">
             @foreach([
-                ['icon'=>'fa-trophy','color'=>'#dcfce7','iconColor'=>'#15803d','title'=>'Hadiah Menarik','desc'=>'Total hadiah lebih dari 75 juta rupiah untuk para juara dan runner-up terbaik.'],
+                ['icon'=>'fa-trophy','color'=>'#dcfce7','iconColor'=>'#15803d','title'=>'Hadiah Menarik','desc'=>'Total hadiah mencapai ' . ($settings->total_prize ?? 'Rp 50.000.000') . ' untuk para tim terbaik.'],
                 ['icon'=>'fa-users','color'=>'#dbeafe','iconColor'=>'#1d4ed8','title'=>'Persaudaraan Antar Kecamatan','desc'=>'Mempererat hubungan antar warga melalui olahraga yang sportif dan kompetitif.'],
                 ['icon'=>'fa-star','color'=>'#fef3c7','iconColor'=>'#92400e','title'=>'Kompetisi Bergengsi','desc'=>'Sistem pertandingan yang terstruktur dan transparan dengan wasit berpengalaman.'],
                 ['icon'=>'fa-mobile-alt','color'=>'#f3e8ff','iconColor'=>'#7c3aed','title'=>'Platform Digital','desc'=>'Pendaftaran online, jadwal real-time, dan klasemen langsung di genggaman tangan.'],

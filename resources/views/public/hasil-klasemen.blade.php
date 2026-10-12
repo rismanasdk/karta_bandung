@@ -29,7 +29,7 @@
         <!-- KLASEMEN -->
         <div class="tab-pane fade show active" id="klasemen">
             <div class="row g-4">
-                @foreach($standings as $groupName => $teams)
+                @forelse($standings as $groupName => $teams)
                 <div class="col-12">
                     <div class="card border-0 card-karta overflow-hidden">
                         <div class="card-header py-3 d-flex align-items-center gap-2" style="background:#0a1628;">
@@ -90,7 +90,13 @@
                         </div>
                     </div>
                 </div>
-                @endforeach
+                @empty
+                <div class="col-12 text-center py-5 text-muted">
+                    <i class="fas fa-table fa-3x mb-3 d-block"></i>
+                    <h6 class="fw-bold">Belum Ada Data Klasemen</h6>
+                    <p class="small">Data klasemen akan diperbarui setelah pertandingan turnamen dimulai.</p>
+                </div>
+                @endforelse
             </div>
         </div>
 

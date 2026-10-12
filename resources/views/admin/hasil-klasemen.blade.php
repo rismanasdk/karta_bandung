@@ -11,17 +11,17 @@
             </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead>
-                        <tr class="standings-table">
-                            <th class="text-white ps-4">Pertandingan</th>
-                            <th class="text-white">Tanggal</th>
-                            <th class="text-white">Status</th>
-                            <th class="text-white">Skor</th>
-                            <th class="text-white text-center">Aksi</th>
+                    <thead style="background:#f1f5f9;">
+                        <tr>
+                            <th class="text-dark ps-4 fw-bold small">Pertandingan</th>
+                            <th class="text-dark fw-bold small">Tanggal</th>
+                            <th class="text-dark fw-bold small">Status</th>
+                            <th class="text-dark fw-bold small">Skor</th>
+                            <th class="text-dark text-center fw-bold small">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($matches as $m)
+                        @forelse($matches as $m)
                         <tr>
                             <td class="ps-4">
                                 <div class="fw-semibold small" style="color:#0a1628;">
@@ -86,7 +86,13 @@
                                 @endif
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted small">
+                                <i class="fas fa-info-circle me-1"></i> Belum ada jadwal/data pertandingan yang perlu diinput
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -100,18 +106,21 @@
                 <h6 class="fw-bold mb-0" style="color:#0a1628;"><i class="fas fa-table text-success me-2"></i> Klasemen Grup A</h6>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0 standings-table">
-                    <thead>
+                <table class="table table-hover align-middle mb-0">
+                    <thead style="background:#f1f5f9;">
                         <tr>
-                            <th class="text-white text-center ps-3">Pos</th>
-                            <th class="text-white">Tim</th>
-                            <th class="text-white text-center">M</th><th class="text-white text-center">W</th>
-                            <th class="text-white text-center">D</th><th class="text-white text-center">L</th>
-                            <th class="text-white text-center">SG</th><th class="text-white text-center fw-bold">Pts</th>
+                            <th class="text-dark text-center ps-3 fw-bold small">Pos</th>
+                            <th class="text-dark fw-bold small">Tim</th>
+                            <th class="text-dark text-center fw-bold small">M</th>
+                            <th class="text-dark text-center fw-bold small">W</th>
+                            <th class="text-dark text-center fw-bold small">D</th>
+                            <th class="text-dark text-center fw-bold small">L</th>
+                            <th class="text-dark text-center fw-bold small">SG</th>
+                            <th class="text-dark text-center fw-bold small">Pts</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($groupA as $i => $t)
+                        @forelse($groupA as $i => $t)
                         <tr>
                             <td class="text-center ps-3 fw-bold @if($i==0) text-success @elseif($i==1) text-primary @elseif($i==2) text-warning @endif">{{ $i+1 }}</td>
                             <td class="fw-semibold small">{{ $t->name }}</td>
@@ -122,7 +131,13 @@
                             <td class="text-center small">{{ $t->goal_difference > 0 ? '+' : '' }}{{ $t->goal_difference }}</td>
                             <td class="text-center fw-bold" style="color:#0a1628;">{{ $t->points }}</td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted small">
+                                <i class="fas fa-info-circle me-1"></i> Belum ada data tim / klasemen untuk Grup A
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -136,18 +151,21 @@
                 <h6 class="fw-bold mb-0" style="color:#0a1628;"><i class="fas fa-table text-primary me-2"></i> Klasemen Grup B</h6>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0 standings-table">
-                    <thead>
+                <table class="table table-hover align-middle mb-0">
+                    <thead style="background:#f1f5f9;">
                         <tr>
-                            <th class="text-white text-center ps-3">Pos</th>
-                            <th class="text-white">Tim</th>
-                            <th class="text-white text-center">M</th><th class="text-white text-center">W</th>
-                            <th class="text-white text-center">D</th><th class="text-white text-center">L</th>
-                            <th class="text-white text-center">SG</th><th class="text-white text-center fw-bold">Pts</th>
+                            <th class="text-dark text-center ps-3 fw-bold small">Pos</th>
+                            <th class="text-dark fw-bold small">Tim</th>
+                            <th class="text-dark text-center fw-bold small">M</th>
+                            <th class="text-dark text-center fw-bold small">W</th>
+                            <th class="text-dark text-center fw-bold small">D</th>
+                            <th class="text-dark text-center fw-bold small">L</th>
+                            <th class="text-dark text-center fw-bold small">SG</th>
+                            <th class="text-dark text-center fw-bold small">Pts</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($groupB as $i => $t)
+                        @forelse($groupB as $i => $t)
                         <tr>
                             <td class="text-center ps-3 fw-bold @if($i==0) text-success @elseif($i==1) text-primary @elseif($i==2) text-warning @endif">{{ $i+1 }}</td>
                             <td class="fw-semibold small">{{ $t->name }}</td>
@@ -158,7 +176,13 @@
                             <td class="text-center small">{{ $t->goal_difference > 0 ? '+' : '' }}{{ $t->goal_difference }}</td>
                             <td class="text-center fw-bold" style="color:#0a1628;">{{ $t->points }}</td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted small">
+                                <i class="fas fa-info-circle me-1"></i> Belum ada data tim / klasemen untuk Grup B
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

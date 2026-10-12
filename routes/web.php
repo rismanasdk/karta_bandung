@@ -20,10 +20,10 @@ Route::middleware('guest')->group(function () {
     Route::get('/masuk', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/masuk', [LoginController::class, 'login'])->name('login.post');
     Route::get('/daftar', function() {
-        return redirect()->route('login')->with('warning', 'Pendaftaran akun publik ditutup. Silakan login menggunakan akun Kecamatan resmi.');
+        return redirect()->route('login');
     })->name('register');
     Route::post('/daftar', function() {
-        return redirect()->route('login')->with('warning', 'Pendaftaran akun publik ditutup. Silakan login menggunakan akun Kecamatan resmi.');
+        return redirect()->route('login');
     })->name('register.post');
 });
 
@@ -35,6 +35,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
     // Pendaftar
     Route::get('/pendaftar', [AdminController::class, 'pendaftar'])->name('pendaftar');
+    Route::delete('/pendaftar/{id}', [AdminController::class, 'destroyPendaftar'])->name('pendaftar.destroy');
 
     // Verifikasi
     Route::get('/verifikasi', [AdminController::class, 'verifikasi'])->name('verifikasi');
@@ -87,4 +88,6 @@ Route::prefix('peserta')->name('peserta.')->middleware(['auth', 'role:user'])->g
     Route::get('/pengaturan', [PesertaController::class, 'pengaturan'])->name('pengaturan');
     Route::post('/pengaturan/password', [PesertaController::class, 'updatePassword'])->name('pengaturan.password');
     Route::post('/notifikasi/baca-semua', [PesertaController::class, 'bacaSemua'])->name('notifikasi.baca-semua');
+    Route::delete('/notifikasi/{id}', [PesertaController::class, 'destroyNotifikasi'])->name('notifikasi.destroy');
+    Route::delete('/notifikasi', [PesertaController::class, 'destroyAllNotifikasi'])->name('notifikasi.destroy-all');
 });
