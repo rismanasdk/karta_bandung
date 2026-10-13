@@ -22,7 +22,7 @@
             <span class="badge bg-secondary">Belum Mendaftar</span>
             @endif
             <div class="mt-3 pt-3 border-top text-muted small">
-                Bergabung {{ auth()->user()->created_at->translatedFormat('d F Y') }}
+                Bergabung {{ auth()->user()->created_at?->translatedFormat('d F Y') ?? '-'}}
             </div>
         </div>
     </div>
