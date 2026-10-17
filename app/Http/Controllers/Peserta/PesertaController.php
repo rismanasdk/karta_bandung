@@ -64,7 +64,17 @@ class PesertaController extends Controller
 
         $reg = $user->registration;
 
-        $request->validate([
+        $pemainSehatRules = [];
+        foreach ((array) $request->input('pemain', []) as $index => $pemainInput) {
+            $member = isset($pemainInput['id']) && $reg
+                ? $reg->members()->where('tipe', 'pemain')->find($pemainInput['id'])
+                : null;
+            $pemainSehatRules["pemain.{$index}.surat_sehat"] = ($member && $member->surat_sehat_path)
+                ? 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+                : 'required|image|mimes:jpg,jpeg,png|max:2048';
+        }
+
+        $request->validate(array_merge([
             'nama_tim'           => 'required|string|max:100',
             'surat_rekomendasi'  => ($reg && $reg->surat_rekomendasi_path) ? 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048' : 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'pemain'             => 'required|array|min:1|max:25',
@@ -76,6 +86,7 @@ class PesertaController extends Controller
             'pemain.*.ktp'       => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'pemain.*.kk'        => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'pemain.*.pasfoto'   => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'pemain.*.surat_sehat' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'official'           => 'nullable|array|max:5',
             'official.*.full_name' => 'required|string|max:100',
             'official.*.nik'       => 'required|string|size:16',
@@ -107,6 +118,10 @@ class PesertaController extends Controller
             'pemain.*.kk.max' => 'Ukuran foto KK pemain maksimal 2MB.',
             'pemain.*.pasfoto.mimes' => 'Pas foto pemain harus berupa file JPG, JPEG, atau PNG.',
             'pemain.*.pasfoto.max' => 'Ukuran pas foto pemain maksimal 2MB.',
+            'pemain.*.surat_sehat.required' => 'Surat keterangan sehat pemain wajib diunggah.',
+            'pemain.*.surat_sehat.image' => 'Surat keterangan sehat harus berupa gambar.',
+            'pemain.*.surat_sehat.mimes' => 'Surat keterangan sehat harus berupa JPG, JPEG, atau PNG.',
+            'pemain.*.surat_sehat.max' => 'Ukuran surat keterangan sehat maksimal 2MB.',
 
             'official.*.full_name.required' => 'Nama lengkap official wajib diisi.',
             'official.*.nik.required' => 'NIK official wajib diisi.',
@@ -117,7 +132,7 @@ class PesertaController extends Controller
             'official.*.ktp.max' => 'Ukuran foto KTP official maksimal 2MB.',
             'official.*.pasfoto.mimes' => 'Pas foto official harus berupa file JPG, JPEG, atau PNG.',
             'official.*.pasfoto.max' => 'Ukuran pas foto official maksimal 2MB.',
-        ]);
+        ], $pemainSehatRules));
 
         $regData = [
             'nama_tim' => $request->nama_tim,
@@ -170,6 +185,10 @@ class PesertaController extends Controller
                 if ($member->pasfoto_path) Storage::disk('public')->delete($member->pasfoto_path);
                 $memberData['pasfoto_path'] = $pData['pasfoto']->store('registrations/pasfoto', 'public');
             }
+            if (isset($pData['surat_sehat'])) {
+                if ($member->surat_sehat_path) Storage::disk('public')->delete($member->surat_sehat_path);
+                $memberData['surat_sehat_path'] = $pData['surat_sehat']->store('registrations/surat-sehat', 'public');
+            }
 
             $member->fill($memberData);
             $member->save();
@@ -216,6 +235,7 @@ class PesertaController extends Controller
             if ($m->ktp_path) Storage::disk('public')->delete($m->ktp_path);
             if ($m->kk_path) Storage::disk('public')->delete($m->kk_path);
             if ($m->pasfoto_path) Storage::disk('public')->delete($m->pasfoto_path);
+            if ($m->surat_sehat_path) Storage::disk('public')->delete($m->surat_sehat_path);
             $m->delete();
         }
 

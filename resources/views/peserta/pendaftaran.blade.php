@@ -173,6 +173,13 @@
                         @endif
                         <input type="file" name="pemain[{{ $index }}][kk]" class="form-control form-control-sm" accept="image/jpeg,image/png,application/pdf" {{ isset($pemain['id']) ? '' : 'required' }} {{ $reg && $reg->status == 'Terverifikasi' ? 'disabled' : '' }}>
                     </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Surat Keterangan Sehat (Gambar, max 2MB)</label>
+                        @if(!empty($pemain['surat_sehat_path']))
+                            <div class="mb-1"><a href="{{ Storage::url($pemain['surat_sehat_path']) }}" target="_blank" class="small">Lihat Surat Keterangan Sehat</a></div>
+                        @endif
+                        <input type="file" name="pemain[{{ $index }}][surat_sehat]" class="form-control form-control-sm" accept="image/jpeg,image/png" {{ !empty($pemain['surat_sehat_path']) ? '' : 'required' }} {{ $reg && $reg->status == 'Terverifikasi' ? 'disabled' : '' }}>
+                    </div>
                 </div>
             </div>
             @endforeach
@@ -304,6 +311,10 @@
             <div class="col-md-4">
                 <label class="form-label fw-semibold small">Foto KK (Max 2MB)</label>
                 <input type="file" name="pemain[__INDEX__][kk]" class="form-control form-control-sm" accept="image/jpeg,image/png,application/pdf" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold small">Surat Keterangan Sehat (Gambar, max 2MB)</label>
+                <input type="file" name="pemain[__INDEX__][surat_sehat]" class="form-control form-control-sm" accept="image/jpeg,image/png" required>
             </div>
         </div>
     </div>

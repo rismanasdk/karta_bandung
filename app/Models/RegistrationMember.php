@@ -21,6 +21,7 @@ class RegistrationMember extends Model
         'ktp_path',
         'kk_path',
         'pasfoto_path',
+        'surat_sehat_path',
     ];
 
     protected $casts = [
