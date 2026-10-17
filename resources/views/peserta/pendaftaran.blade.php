@@ -133,6 +133,11 @@
                         <label class="form-label fw-semibold small">NIK</label>
                         <input type="text" name="pemain[{{ $index }}][nik]" class="form-control form-control-sm" maxlength="16" value="{{ $pemain['nik'] ?? '' }}" required {{ $reg && $reg->status == 'Terverifikasi' ? 'readonly' : '' }}>
                     </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Nomor KK</label>
+                        <input type="text" name="pemain[{{ $index }}][nomor_kk]" class="form-control form-control-sm" inputmode="numeric" maxlength="16" pattern="[0-9]{16}" value="{{ $pemain['nomor_kk'] ?? '' }}" placeholder="16 digit" required {{ $reg && $reg->status == 'Terverifikasi' ? 'readonly' : '' }}>
+                        <small class="text-muted">Masukkan 16 digit nomor Kartu Keluarga.</small>
+                    </div>
                     <div class="col-md-4">
                         <label class="form-label fw-semibold small">Tanggal Lahir</label>
                         <input type="date" name="pemain[{{ $index }}][tanggal_lahir]" class="form-control form-control-sm" value="{{ isset($pemain['tanggal_lahir']) ? \Carbon\Carbon::parse($pemain['tanggal_lahir'])->format('Y-m-d') : '' }}" required {{ $reg && $reg->status == 'Terverifikasi' ? 'readonly' : '' }}>
@@ -286,6 +291,10 @@
             <div class="col-md-4">
                 <label class="form-label fw-semibold small">Tanggal Lahir</label>
                 <input type="date" name="pemain[__INDEX__][tanggal_lahir]" class="form-control form-control-sm" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold small">Nomor KK</label>
+                <input type="text" name="pemain[__INDEX__][nomor_kk]" class="form-control form-control-sm" inputmode="numeric" maxlength="16" pattern="[0-9]{16}" placeholder="16 digit" required>
             </div>
             <div class="col-md-4">
                 <label class="form-label fw-semibold small">Posisi</label>

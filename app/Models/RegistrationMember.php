@@ -14,6 +14,7 @@ class RegistrationMember extends Model
         'tipe',
         'full_name',
         'nik',
+        'nomor_kk',
         'tanggal_lahir',
         'posisi',
         'nomor_punggung',

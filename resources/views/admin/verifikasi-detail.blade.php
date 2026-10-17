@@ -166,6 +166,7 @@
                                 <td>{{ $pem->posisi }}</td>
                                 <td>
                                     <div>{{ $pem->nik }}</div>
+                                    <small class="text-muted d-block">No. KK: {{ $pem->nomor_kk ?: '—' }}</small>
                                     <small class="text-muted">{{ $pem->tanggal_lahir->format('d M Y') }}</small>
                                 </td>
                                 <td>

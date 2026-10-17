@@ -21,9 +21,6 @@
                     <a href="{{ route('register') }}" class="btn btn-green btn-lg fw-bold px-4">
                         <i class="fas fa-futbol me-2"></i> Masuk/Login
                     </a>
-                    <a href="{{ route('tentang') }}" class="btn btn-outline-light btn-lg px-4">
-                        <i class="fas fa-info-circle me-2"></i> Pelajari Lebih Lanjut
-                    </a>
                 </div>
 
                 <div class="d-flex flex-wrap gap-4 pt-4" style="border-top:1px solid rgba(255,255,255,0.15);">
