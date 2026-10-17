@@ -111,6 +111,7 @@
                                 <th class="small text-muted py-3">Jabatan</th>
                                 <th class="small text-muted py-3">NIK & Tgl Lahir</th>
                                 <th class="small text-muted py-3">Dokumen</th>
+                                @if($registration->status === 'Terverifikasi')<th class="small text-muted py-3 text-end pe-4">Aksi</th>@endif
                             </tr>
                         </thead>
                         <tbody>
@@ -129,9 +130,18 @@
                                         @if(!$off->pasfoto_path && !$off->ktp_path)<span class="text-muted small">Belum ada dokumen</span>@endif
                                     </div>
                                 </td>
+                                @if($registration->status === 'Terverifikasi')
+                                <td class="text-end pe-4">
+                                    <form method="POST" action="{{ route('admin.verifikasi.anggota.destroy', [$registration->id, $off->id]) }}" onsubmit="return confirm(@js('Hapus official ' . $off->full_name . '? Dokumen yang diunggah juga akan dihapus.'))">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-alt me-1"></i> Hapus</button>
+                                    </form>
+                                </td>
+                                @endif
                             </tr>
                             @empty
-                            <tr><td colspan="4" class="text-center py-3 text-muted">Belum ada official</td></tr>
+                            <tr><td colspan="{{ $registration->status === 'Terverifikasi' ? 5 : 4 }}" class="text-center py-3 text-muted">Belum ada official</td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -156,10 +166,11 @@
                                 <th class="small text-muted py-3">Posisi</th>
                                 <th class="small text-muted py-3">NIK & Tgl Lahir</th>
                                 <th class="small text-muted py-3">Dokumen</th>
+                                @if($registration->status === 'Terverifikasi')<th class="small text-muted py-3 text-end pe-4">Aksi</th>@endif
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($registration->members()->where('tipe', 'pemain')->get() as $pem)
+                            @forelse($registration->members()->where('tipe', 'pemain')->get() as $pem)
                             <tr>
                                 <td class="px-4 fw-bold text-center" style="width:50px;">{{ $pem->nomor_punggung }}</td>
                                 <td class="fw-medium">{{ $pem->full_name }}</td>
@@ -178,8 +189,19 @@
                                         @if(!$pem->pasfoto_path && !$pem->ktp_path && !$pem->kk_path && !$pem->surat_sehat_path)<span class="text-muted small">Belum ada dokumen</span>@endif
                                     </div>
                                 </td>
+                                @if($registration->status === 'Terverifikasi')
+                                <td class="text-end pe-4">
+                                    <form method="POST" action="{{ route('admin.verifikasi.anggota.destroy', [$registration->id, $pem->id]) }}" onsubmit="return confirm(@js('Hapus pemain ' . $pem->full_name . '? Dokumen yang diunggah juga akan dihapus.'))">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-alt me-1"></i> Hapus</button>
+                                    </form>
+                                </td>
+                                @endif
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr><td colspan="{{ $registration->status === 'Terverifikasi' ? 6 : 5 }}" class="text-center py-3 text-muted">Belum ada pemain</td></tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
