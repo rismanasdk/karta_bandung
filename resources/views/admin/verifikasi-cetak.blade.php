@@ -712,6 +712,7 @@
                         </div>
                         <div class="p-2 rounded-2 bg-light border mt-2" style="font-size:0.76rem;">
                             <div class="mb-1"><span class="text-muted">NIK:</span> <strong class="mono text-dark">{{ $pem->nik }}</strong></div>
+                            @if($pem->nomor_kk)<div class="mb-1"><span class="text-muted">No. KK:</span> <strong class="mono text-dark">{{ $pem->nomor_kk }}</strong></div>@endif
                             <div class="mb-1"><span class="text-muted">Tanggal Lahir:</span> <strong class="text-dark">{{ $pem->tanggal_lahir->translatedFormat('d F Y') }}</strong></div>
                             @php
                                 $usia = $pem->tanggal_lahir->age;

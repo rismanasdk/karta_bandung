@@ -154,12 +154,14 @@
                                 <td>{{ $pem->posisi }}</td>
                                 <td>
                                     <div>{{ $pem->nik }}</div>
+                                    @if($pem->nomor_kk)<small class="text-muted d-block" style="font-size:0.75rem;">KK: {{ $pem->nomor_kk }}</small>@endif
                                     <small class="text-muted">{{ $pem->tanggal_lahir->format('d M Y') }}</small>
                                 </td>
                                 <td>
                                     @if($pem->pasfoto_path)<a href="{{ Storage::url($pem->pasfoto_path) }}" target="_blank" download class="badge bg-secondary text-decoration-none mb-1 d-inline-block" title="Klik untuk lihat / unduh"><i class="fas fa-image me-1"></i>Pas Foto</a>@endif
                                     @if($pem->ktp_path)<a href="{{ Storage::url($pem->ktp_path) }}" target="_blank" download class="badge bg-primary text-decoration-none mb-1 d-inline-block" title="Klik untuk lihat / unduh"><i class="fas fa-id-card me-1"></i>KTP</a>@endif
                                     @if($pem->kk_path)<a href="{{ Storage::url($pem->kk_path) }}" target="_blank" download class="badge bg-success text-decoration-none mb-1 d-inline-block" title="Klik untuk lihat / unduh"><i class="fas fa-file-alt me-1"></i>KK</a>@endif
+                                    @if($pem->surat_sehat_path)<a href="{{ Storage::url($pem->surat_sehat_path) }}" target="_blank" download class="badge bg-info text-decoration-none mb-1 d-inline-block" title="Klik untuk lihat / unduh"><i class="fas fa-file-medical me-1"></i>Surat Sehat</a>@endif
                                 </td>
                             </tr>
                             @endforeach

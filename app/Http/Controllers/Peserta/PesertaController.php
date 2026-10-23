@@ -58,11 +58,13 @@ class PesertaController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->registration && in_array($user->registration->status, ['Menunggu Verifikasi', 'Terverifikasi'])) {
-            return back()->with('error', 'Anda sudah memiliki pendaftaran yang aktif.');
-        }
-
+        // Cari pendaftaran yang sudah ada untuk user ini (jika ada)
         $reg = $user->registration;
+
+        // Hanya tolak jika pendaftaran tim sudah resmi Terverifikasi (resmi terkunci oleh panitia)
+        if ($reg && $reg->status === 'Terverifikasi') {
+            return back()->with('error', 'Pendaftaran tim Anda sudah terverifikasi dan terkunci. Hubungi panitia jika perlu perubahan data.');
+        }
 
         $request->validate([
             'nama_tim'           => 'required|string|max:100',
@@ -70,11 +72,13 @@ class PesertaController extends Controller
             'pemain'             => 'required|array|min:1|max:25',
             'pemain.*.full_name' => 'required|string|max:100',
             'pemain.*.nik'       => 'required|string|size:16',
+            'pemain.*.nomor_kk'  => 'nullable|string|size:16',
             'pemain.*.tanggal_lahir' => 'required|date',
             'pemain.*.posisi'     => 'required|string|max:50',
             'pemain.*.nomor_punggung' => 'required|integer|min:1|max:99',
             'pemain.*.ktp'       => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'pemain.*.kk'        => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'pemain.*.surat_sehat' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'pemain.*.pasfoto'   => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'official'           => 'nullable|array|max:5',
             'official.*.full_name' => 'required|string|max:100',
@@ -95,6 +99,7 @@ class PesertaController extends Controller
             'pemain.*.full_name.required' => 'Nama lengkap pemain wajib diisi.',
             'pemain.*.nik.required' => 'NIK pemain wajib diisi.',
             'pemain.*.nik.size' => 'NIK pemain harus terdiri dari 16 digit angka.',
+            'pemain.*.nomor_kk.size' => 'Nomor KK pemain harus terdiri dari 16 digit angka.',
             'pemain.*.tanggal_lahir.required' => 'Tanggal lahir pemain wajib diisi.',
             'pemain.*.posisi.required' => 'Posisi pemain wajib diisi.',
             'pemain.*.nomor_punggung.required' => 'Nomor punggung pemain wajib diisi.',
@@ -105,6 +110,8 @@ class PesertaController extends Controller
             'pemain.*.ktp.max' => 'Ukuran foto KTP pemain maksimal 2MB.',
             'pemain.*.kk.mimes' => 'Foto KK pemain harus berupa file JPG, JPEG, PNG, atau PDF.',
             'pemain.*.kk.max' => 'Ukuran foto KK pemain maksimal 2MB.',
+            'pemain.*.surat_sehat.mimes' => 'Surat keterangan sehat pemain harus berupa file JPG, JPEG, PNG, atau PDF.',
+            'pemain.*.surat_sehat.max' => 'Ukuran surat keterangan sehat pemain maksimal 2MB.',
             'pemain.*.pasfoto.mimes' => 'Pas foto pemain harus berupa file JPG, JPEG, atau PNG.',
             'pemain.*.pasfoto.max' => 'Ukuran pas foto pemain maksimal 2MB.',
 
@@ -144,17 +151,23 @@ class PesertaController extends Controller
         $existingPemainIds = [];
         foreach ($request->pemain as $pData) {
             $memberData = [
+                'registration_id' => $reg->id,
                 'tipe' => 'pemain',
                 'full_name' => $pData['full_name'],
                 'nik' => $pData['nik'],
+                'nomor_kk' => $pData['nomor_kk'] ?? null,
                 'tanggal_lahir' => $pData['tanggal_lahir'],
                 'posisi' => $pData['posisi'],
                 'nomor_punggung' => $pData['nomor_punggung'],
             ];
 
-            if (isset($pData['id'])) {
+            if (isset($pData['id']) && $pData['id']) {
                 $member = $reg->members()->find($pData['id']);
             } else {
+                $member = null;
+            }
+
+            if (!$member) {
                 $member = $reg->members()->make();
             }
 
@@ -165,6 +178,10 @@ class PesertaController extends Controller
             if (isset($pData['kk'])) {
                 if ($member->kk_path) Storage::disk('public')->delete($member->kk_path);
                 $memberData['kk_path'] = $pData['kk']->store('registrations/kk', 'public');
+            }
+            if (isset($pData['surat_sehat'])) {
+                if ($member->surat_sehat_path) Storage::disk('public')->delete($member->surat_sehat_path);
+                $memberData['surat_sehat_path'] = $pData['surat_sehat']->store('registrations/surat_sehat', 'public');
             }
             if (isset($pData['pasfoto'])) {
                 if ($member->pasfoto_path) Storage::disk('public')->delete($member->pasfoto_path);
@@ -181,6 +198,7 @@ class PesertaController extends Controller
         if ($request->has('official') && is_array($request->official)) {
             foreach ($request->official as $oData) {
                 $memberData = [
+                    'registration_id' => $reg->id,
                     'tipe' => 'official',
                     'full_name' => $oData['full_name'],
                     'nik' => $oData['nik'],
@@ -188,9 +206,13 @@ class PesertaController extends Controller
                     'jabatan' => $oData['jabatan'],
                 ];
 
-                if (isset($oData['id'])) {
+                if (isset($oData['id']) && $oData['id']) {
                     $member = $reg->members()->find($oData['id']);
                 } else {
+                    $member = null;
+                }
+
+                if (!$member) {
                     $member = $reg->members()->make();
                 }
 
@@ -215,11 +237,15 @@ class PesertaController extends Controller
         foreach ($membersToDelete as $m) {
             if ($m->ktp_path) Storage::disk('public')->delete($m->ktp_path);
             if ($m->kk_path) Storage::disk('public')->delete($m->kk_path);
+            if ($m->surat_sehat_path) Storage::disk('public')->delete($m->surat_sehat_path);
             if ($m->pasfoto_path) Storage::disk('public')->delete($m->pasfoto_path);
             $m->delete();
         }
 
-        return back()->with('success', 'Pendaftaran tim berhasil dikirim! Mohon tunggu proses verifikasi oleh panitia.');
+        $totalPemain = count($existingPemainIds);
+        $totalOfficial = count($existingOfficialIds);
+
+        return back()->with('success', "Data pendaftaran tim berhasil disimpan! (Tersimpan: {$totalPemain}/25 Peserta, {$totalOfficial}/5 Official). Anda dapat terus menambahkan data berikutnya.");
     }
 
     public function profil()

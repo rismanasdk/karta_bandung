@@ -14,12 +14,14 @@ class RegistrationMember extends Model
         'tipe',
         'full_name',
         'nik',
+        'nomor_kk',
         'tanggal_lahir',
         'posisi',
         'nomor_punggung',
         'jabatan',
         'ktp_path',
         'kk_path',
+        'surat_sehat_path',
         'pasfoto_path',
     ];
 

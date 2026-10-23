@@ -12,6 +12,8 @@
     ];
     $status = $reg ? $reg->status : null;
     $info = $statusInfo[$status] ?? $statusInfo[null];
+    $pemainList = old('pemain', $reg ? $reg->members()->where('tipe', 'pemain')->get()->toArray() : [[]]);
+    $officialList = old('official', $reg ? $reg->members()->where('tipe', 'official')->get()->toArray() : []);
 @endphp
 
 <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
@@ -30,18 +32,40 @@
 
 {{-- STATUS CARD --}}
 <div class="card border-0 card-karta mb-4" style="border-left:5px solid var(--bs-{{ $info['color'] }})!important;">
-    <div class="card-body d-flex align-items-center gap-4 p-4">
-        <div style="width:56px;height:56px;border-radius:50%;background:var(--bs-{{ $info['color'] }}-bg, #f8fafc);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.5rem;" class="text-{{ $info['color'] }}">
-            <i class="fas {{ $info['icon'] }}"></i>
-        </div>
-        <div>
-            <h5 class="fw-bold mb-1" style="color:#0a1628;">Status: {{ $info['label'] }}</h5>
-            <p class="text-muted mb-0 small">{{ $info['desc'] }}</p>
-            @if($reg && $reg->status === 'Ditolak' && $reg->rejection_reason)
-            <div class="mt-2 p-2 rounded-3" style="background:#fff1f2;border:1px solid #fecaca;">
-                <span class="text-danger small"><strong>Alasan:</strong> {{ $reg->rejection_reason }}</span>
+    <div class="card-body p-4">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div style="width:56px;height:56px;border-radius:50%;background:var(--bs-{{ $info['color'] }}-bg, #f8fafc);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.5rem;" class="text-{{ $info['color'] }}">
+                    <i class="fas {{ $info['icon'] }}"></i>
+                </div>
+                <div>
+                    <h5 class="fw-bold mb-1" style="color:#0a1628;">Status: {{ $info['label'] }}</h5>
+                    <p class="text-muted mb-0 small">
+                        @if($reg && $reg->status === 'Menunggu Verifikasi')
+                            Data tim berhasil disimpan ke sistem. Anda dapat terus melengkapi data pemain & official secara bertahap sampai kuota maksimal (25 pemain, 5 official).
+                        @else
+                            {{ $info['desc'] }}
+                        @endif
+                    </p>
+                    @if($reg && $reg->status === 'Ditolak' && $reg->rejection_reason)
+                    <div class="mt-2 p-2 rounded-3" style="background:#fff1f2;border:1px solid #fecaca;">
+                        <span class="text-danger small"><strong>Alasan:</strong> {{ $reg->rejection_reason }}</span>
+                    </div>
+                    @endif
+                </div>
             </div>
-            @endif
+
+            {{-- Progress Counter Data Tersimpan --}}
+            <div class="d-flex align-items-center gap-2">
+                <div class="text-center p-2 px-3 rounded-3 bg-light border">
+                    <div class="text-muted" style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Peserta Tersimpan</div>
+                    <div class="fs-5 fw-bold text-primary"><span class="display-pemain-count">{{ count($pemainList) }}</span>/25</div>
+                </div>
+                <div class="text-center p-2 px-3 rounded-3 bg-light border">
+                    <div class="text-muted" style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Official Tersimpan</div>
+                    <div class="fs-5 fw-bold text-info"><span class="display-official-count">{{ count($officialList) }}</span>/5</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -104,10 +128,18 @@
 
     {{-- DATA PEMAIN --}}
     <div class="card border-0 card-karta mb-4">
-        <div class="card-header border-0 bg-white py-3 d-flex justify-content-between align-items-center">
-            <h6 class="fw-bold mb-0" style="color:#0a1628;"><i class="fas fa-users text-primary me-2"></i> Data Pemain (Maks. 25)</h6>
+        <div class="card-header border-0 bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-2">
+                <h6 class="fw-bold mb-0" style="color:#0a1628;"><i class="fas fa-users text-primary me-2"></i> Data Pemain (Maks. 25)</h6>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1" style="font-size:0.78rem;">
+                    Peserta: <strong class="display-pemain-count">{{ count($pemainList) }}</strong>/25
+                </span>
+            </div>
             @if(!$reg || $reg->status != 'Terverifikasi')
-            <button type="button" class="btn btn-sm btn-outline-primary" id="btnTambahPemain"><i class="fas fa-plus"></i> Tambah Pemain</button>
+            <button type="button" class="btn btn-sm btn-outline-primary" id="btnTambahPemain" {{ count($pemainList) >= 25 ? 'disabled' : '' }}>
+                <i class="fas {{ count($pemainList) >= 25 ? 'fa-check' : 'fa-plus' }} me-1"></i>
+                {{ count($pemainList) >= 25 ? 'Maksimal 25 Pemain Tercapai' : 'Tambah Pemain' }}
+            </button>
             @endif
         </div>
         <div class="card-body p-4" id="containerPemain">
@@ -133,7 +165,12 @@
                         <label class="form-label fw-semibold small">NIK</label>
                         <input type="text" name="pemain[{{ $index }}][nik]" class="form-control form-control-sm" maxlength="16" value="{{ $pemain['nik'] ?? '' }}" required {{ $reg && $reg->status == 'Terverifikasi' ? 'readonly' : '' }}>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Nomor KK</label>
+                        <input type="text" name="pemain[{{ $index }}][nomor_kk]" class="form-control form-control-sm" maxlength="16" placeholder="16 digit" value="{{ $pemain['nomor_kk'] ?? '' }}" required {{ $reg && $reg->status == 'Terverifikasi' ? 'readonly' : '' }}>
+                        <small class="text-muted d-block mt-1">Masukkan 16 digit nomor Kartu Keluarga.</small>
+                    </div>
+                    <div class="col-md-6">
                         <label class="form-label fw-semibold small">Tanggal Lahir</label>
                         <input type="date" name="pemain[{{ $index }}][tanggal_lahir]" class="form-control form-control-sm" value="{{ isset($pemain['tanggal_lahir']) ? \Carbon\Carbon::parse($pemain['tanggal_lahir'])->format('Y-m-d') : '' }}" required {{ $reg && $reg->status == 'Terverifikasi' ? 'readonly' : '' }}>
                     </div>
@@ -150,8 +187,6 @@
                         <label class="form-label fw-semibold small">No Punggung</label>
                         <input type="number" name="pemain[{{ $index }}][nomor_punggung]" class="form-control form-control-sm" min="1" max="99" value="{{ $pemain['nomor_punggung'] ?? '' }}" required {{ $reg && $reg->status == 'Terverifikasi' ? 'readonly' : '' }}>
                     </div>
-                    
-                    {{-- File Uploads Pemain --}}
                     <div class="col-md-4">
                         <label class="form-label fw-semibold small">Pas Foto (Max 2MB)</label>
                         @if(isset($pemain['pasfoto_path']) && $pemain['pasfoto_path'])
@@ -173,6 +208,13 @@
                         @endif
                         <input type="file" name="pemain[{{ $index }}][kk]" class="form-control form-control-sm" accept="image/jpeg,image/png,application/pdf" {{ isset($pemain['id']) ? '' : 'required' }} {{ $reg && $reg->status == 'Terverifikasi' ? 'disabled' : '' }}>
                     </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small">Surat Keterangan Sehat (Gambar, max 2MB)</label>
+                        @if(isset($pemain['surat_sehat_path']) && $pemain['surat_sehat_path'])
+                            <div class="mb-1"><a href="{{ Storage::url($pemain['surat_sehat_path']) }}" target="_blank" class="small">Lihat File</a></div>
+                        @endif
+                        <input type="file" name="pemain[{{ $index }}][surat_sehat]" class="form-control form-control-sm" accept="image/jpeg,image/png,application/pdf" {{ isset($pemain['id']) ? '' : 'required' }} {{ $reg && $reg->status == 'Terverifikasi' ? 'disabled' : '' }}>
+                    </div>
                 </div>
             </div>
             @endforeach
@@ -181,10 +223,18 @@
 
     {{-- DATA OFFICIAL --}}
     <div class="card border-0 card-karta mb-4">
-        <div class="card-header border-0 bg-white py-3 d-flex justify-content-between align-items-center">
-            <h6 class="fw-bold mb-0" style="color:#0a1628;"><i class="fas fa-user-tie text-info me-2"></i> Data Official (Maks. 5)</h6>
+        <div class="card-header border-0 bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-2">
+                <h6 class="fw-bold mb-0" style="color:#0a1628;"><i class="fas fa-user-tie text-info me-2"></i> Data Official (Maks. 5)</h6>
+                <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1" style="font-size:0.78rem;">
+                    Official: <strong class="display-official-count">{{ count($officialList) }}</strong>/5
+                </span>
+            </div>
             @if(!$reg || $reg->status != 'Terverifikasi')
-            <button type="button" class="btn btn-sm btn-outline-info" id="btnTambahOfficial"><i class="fas fa-plus"></i> Tambah Official</button>
+            <button type="button" class="btn btn-sm btn-outline-info" id="btnTambahOfficial" {{ count($officialList) >= 5 ? 'disabled' : '' }}>
+                <i class="fas {{ count($officialList) >= 5 ? 'fa-check' : 'fa-plus' }} me-1"></i>
+                {{ count($officialList) >= 5 ? 'Maksimal 5 Official Tercapai' : 'Tambah Official' }}
+            </button>
             @endif
         </div>
         <div class="card-body p-4" id="containerOfficial">
@@ -255,8 +305,7 @@
         </div>
         @else
         <button type="submit" class="btn btn-green fw-bold btn-lg px-5" id="btnSubmit">
-            <i class="fas fa-paper-plane me-2"></i>
-            {{ $reg ? 'Perbarui & Kirim Ulang' : 'Kirim Pendaftaran' }}
+            <i class="fas fa-save me-2"></i> Perbarui & Lanjut
         </button>
         @endif
     </div>
@@ -276,7 +325,12 @@
                 <label class="form-label fw-semibold small">NIK</label>
                 <input type="text" name="pemain[__INDEX__][nik]" class="form-control form-control-sm" maxlength="16" required>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold small">Nomor KK</label>
+                <input type="text" name="pemain[__INDEX__][nomor_kk]" class="form-control form-control-sm" maxlength="16" placeholder="16 digit" required>
+                <small class="text-muted d-block mt-1">Masukkan 16 digit nomor Kartu Keluarga.</small>
+            </div>
+            <div class="col-md-6">
                 <label class="form-label fw-semibold small">Tanggal Lahir</label>
                 <input type="date" name="pemain[__INDEX__][tanggal_lahir]" class="form-control form-control-sm" required>
             </div>
@@ -304,6 +358,10 @@
             <div class="col-md-4">
                 <label class="form-label fw-semibold small">Foto KK (Max 2MB)</label>
                 <input type="file" name="pemain[__INDEX__][kk]" class="form-control form-control-sm" accept="image/jpeg,image/png,application/pdf" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold small">Surat Keterangan Sehat (Gambar, max 2MB)</label>
+                <input type="file" name="pemain[__INDEX__][surat_sehat]" class="form-control form-control-sm" accept="image/jpeg,image/png,application/pdf" required>
             </div>
         </div>
     </div>
@@ -350,13 +408,61 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const MAX_PEMAIN = 25;
+    const MAX_OFFICIAL = 5;
+
     let pemainCount = document.querySelectorAll('#containerPemain .pemain-item').length;
     let officialCount = document.querySelectorAll('#containerOfficial .official-item').length;
     let pemainIndex = pemainCount;
     let officialIndex = officialCount;
 
-    const MAX_PEMAIN = 25;
-    const MAX_OFFICIAL = 5;
+    function updateCounters() {
+        let players = document.querySelectorAll('#containerPemain .pemain-item');
+        pemainCount = players.length;
+        players.forEach((el, idx) => {
+            const counter = el.querySelector('.pemain-counter');
+            if (counter) counter.innerText = idx + 1;
+        });
+
+        let officials = document.querySelectorAll('#containerOfficial .official-item');
+        officialCount = officials.length;
+        officials.forEach((el, idx) => {
+            const counter = el.querySelector('.official-counter');
+            if (counter) counter.innerText = idx + 1;
+        });
+
+        // Update semua elemen jumlah data tersimpan / saat ini
+        document.querySelectorAll('.display-pemain-count').forEach(el => el.innerText = pemainCount);
+        document.querySelectorAll('.display-official-count').forEach(el => el.innerText = officialCount);
+
+        // Update tombol Tambah Pemain (dinonaktifkan jika sudah 25)
+        const btnPemain = document.getElementById('btnTambahPemain');
+        if (btnPemain) {
+            if (pemainCount >= MAX_PEMAIN) {
+                btnPemain.disabled = true;
+                btnPemain.classList.add('disabled');
+                btnPemain.innerHTML = '<i class="fas fa-check me-1"></i> Maksimal 25 Pemain Tercapai';
+            } else {
+                btnPemain.disabled = false;
+                btnPemain.classList.remove('disabled');
+                btnPemain.innerHTML = '<i class="fas fa-plus me-1"></i> Tambah Pemain';
+            }
+        }
+
+        // Update tombol Tambah Official (dinonaktifkan jika sudah 5)
+        const btnOfficial = document.getElementById('btnTambahOfficial');
+        if (btnOfficial) {
+            if (officialCount >= MAX_OFFICIAL) {
+                btnOfficial.disabled = true;
+                btnOfficial.classList.add('disabled');
+                btnOfficial.innerHTML = '<i class="fas fa-check me-1"></i> Maksimal 5 Official Tercapai';
+            } else {
+                btnOfficial.disabled = false;
+                btnOfficial.classList.remove('disabled');
+                btnOfficial.innerHTML = '<i class="fas fa-plus me-1"></i> Tambah Official';
+            }
+        }
+    }
 
     document.getElementById('btnTambahPemain')?.addEventListener('click', function() {
         if(pemainCount >= MAX_PEMAIN) {
@@ -390,19 +496,21 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.addEventListener('click', function(e) {
-        if(e.target.classList.contains('btn-hapus-pemain')) {
+        if(e.target.classList.contains('btn-hapus-pemain') || e.target.closest('.btn-hapus-pemain')) {
             if(pemainCount <= 1) {
                 alert('Minimal harus ada 1 pemain!');
                 return;
             }
             if(confirm('Hapus pemain ini?')) {
-                e.target.closest('.pemain-item').remove();
+                const item = e.target.closest('.pemain-item');
+                if (item) item.remove();
                 updateCounters();
             }
         }
-        if(e.target.classList.contains('btn-hapus-official')) {
+        if(e.target.classList.contains('btn-hapus-official') || e.target.closest('.btn-hapus-official')) {
             if(confirm('Hapus official ini?')) {
-                e.target.closest('.official-item').remove();
+                const item = e.target.closest('.official-item');
+                if (item) item.remove();
                 updateCounters();
                 if(officialCount === 0) {
                     let emptyMsg = document.getElementById('emptyOfficialMsg');
@@ -412,15 +520,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    function updateCounters() {
-        let players = document.querySelectorAll('#containerPemain .pemain-item');
-        pemainCount = players.length;
-        players.forEach((el, idx) => el.querySelector('.pemain-counter').innerText = idx + 1);
-
-        let officials = document.querySelectorAll('#containerOfficial .official-item');
-        officialCount = officials.length;
-        officials.forEach((el, idx) => el.querySelector('.official-counter').innerText = idx + 1);
-    }
+    // Jalankan updateCounters saat halaman dimuat
+    updateCounters();
 });
 </script>
 @endpush

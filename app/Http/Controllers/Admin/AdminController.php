@@ -69,6 +69,7 @@ class AdminController extends Controller
         foreach ($registration->members as $m) {
             if ($m->ktp_path) Storage::disk('public')->delete($m->ktp_path);
             if ($m->kk_path) Storage::disk('public')->delete($m->kk_path);
+            if ($m->surat_sehat_path) Storage::disk('public')->delete($m->surat_sehat_path);
             if ($m->pasfoto_path) Storage::disk('public')->delete($m->pasfoto_path);
             $m->delete();
         }
