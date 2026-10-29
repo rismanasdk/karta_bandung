@@ -44,7 +44,9 @@ class PesertaController extends Controller
         $user = Auth::user();
         $registration = $user->registration;
         $reg = $registration;
-        return view('peserta.pendaftaran', compact('user', 'registration', 'reg'));
+        $settings = TournamentSetting::getSettings();
+        $registrationClosed = $settings->isRegistrationClosed();
+        return view('peserta.pendaftaran', compact('user', 'registration', 'reg', 'settings', 'registrationClosed'));
     }
 
     public function pendaftaranCetak()
@@ -56,6 +58,7 @@ class PesertaController extends Controller
 
     public function savePendaftaranDraft(Request $request)
     {
+        $this->ensureRegistrationOpen();
         $user = Auth::user();
         $reg = Registration::where('user_id', $user->id)->first();
         abort_if($reg && in_array($reg->status, ['Menunggu Verifikasi', 'Terverifikasi'], true), 403, 'Pendaftaran sudah diajukan dan sedang dikunci.');
@@ -88,6 +91,7 @@ class PesertaController extends Controller
 
     public function savePendaftaranMember(Request $request)
     {
+        $this->ensureRegistrationOpen();
         $reg = Registration::where('user_id', Auth::id())->firstOrFail();
         abort_if(in_array($reg->status, ['Menunggu Verifikasi', 'Terverifikasi'], true), 403, 'Pendaftaran sudah diajukan dan sedang dikunci.');
 
@@ -126,6 +130,7 @@ class PesertaController extends Controller
 
     public function uploadPendaftaranMemberFile(Request $request)
     {
+        $this->ensureRegistrationOpen();
         $reg = Registration::where('user_id', Auth::id())->firstOrFail();
         abort_if(in_array($reg->status, ['Menunggu Verifikasi', 'Terverifikasi'], true), 403);
         $request->validate(['member_id' => 'required|integer', 'field' => 'required|string', 'file' => 'required|file|max:2048']);
@@ -146,6 +151,7 @@ class PesertaController extends Controller
 
     public function submitPendaftaran(Request $request)
     {
+        $this->ensureRegistrationOpen();
         $reg = Registration::with('members')->where('user_id', Auth::id())->firstOrFail();
         abort_if(in_array($reg->status, ['Menunggu Verifikasi', 'Terverifikasi'], true), 403, 'Pendaftaran sudah diajukan.');
         $request->validate(['confirmation' => 'accepted']);
@@ -169,6 +175,7 @@ class PesertaController extends Controller
 
     public function deletePendaftaranMember($memberId)
     {
+        $this->ensureRegistrationOpen();
         $reg = Registration::where('user_id', Auth::id())->firstOrFail();
         abort_if(in_array($reg->status, ['Menunggu Verifikasi', 'Terverifikasi'], true), 403);
         $member = $reg->members()->findOrFail($memberId);
@@ -177,6 +184,15 @@ class PesertaController extends Controller
         }
         $member->delete();
         return response()->json(['ok' => true]);
+    }
+
+    private function ensureRegistrationOpen(): void
+    {
+        abort_if(
+            TournamentSetting::getSettings()->isRegistrationClosed(),
+            403,
+            'Pendaftaran sudah ditutup dan tidak dapat diubah atau diajukan.'
+        );
     }
 
     public function profil()

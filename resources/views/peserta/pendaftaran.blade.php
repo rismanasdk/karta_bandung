@@ -12,7 +12,7 @@
         'Ditolak' => ['color'=>'danger','icon'=>'fa-times-circle','label'=>'Ditolak','desc'=>'Pendaftaran tim ditolak. Silakan perbaiki dan kirim ulang.'],
     ];
     $status = $reg ? $reg->status : null;
-    $isLocked = $reg && in_array($reg->status, ['Menunggu Verifikasi', 'Terverifikasi'], true);
+    $isLocked = ($reg && in_array($reg->status, ['Menunggu Verifikasi', 'Terverifikasi'], true)) || $registrationClosed;
     $info = $statusInfo[$status] ?? $statusInfo[null];
     $pemainList = old('pemain', $reg ? $reg->members()->where('tipe', 'pemain')->get()->toArray() : [[]]);
     $officialList = old('official', $reg ? $reg->members()->where('tipe', 'official')->get()->toArray() : []);
@@ -31,6 +31,20 @@
     </div>
     @endif
 </div>
+
+@if($registrationClosed)
+<div class="alert alert-danger d-flex align-items-center gap-2 mb-4" role="alert">
+    <i class="fas fa-lock fa-lg"></i>
+    <div><strong>Pendaftaran telah ditutup.</strong>
+        @if($settings->registration_closes_at)
+            Pendaftaran ditutup mulai {{ $settings->registration_closes_at->format('d/m/Y') }}.
+        @else
+            Saat ini pendaftaran tidak dibuka oleh panitia.
+        @endif
+        Data yang sudah tersimpan tetap dapat dilihat, tetapi tidak dapat diubah atau diajukan.
+    </div>
+</div>
+@endif
 
 {{-- STATUS CARD --}}
 <div class="card border-0 card-karta mb-4" style="border-left:5px solid var(--bs-{{ $info['color'] }})!important;">
@@ -470,7 +484,11 @@
         @if($isLocked)
         <div class="alert alert-success mb-0 flex-grow-1 d-flex align-items-center gap-2 py-2">
             <i class="fas fa-lock text-success"></i>
-            <span class="small"><strong>Pendaftaran terkunci.</strong> @if($reg->status === 'Menunggu Verifikasi') Data sedang diperiksa admin. @else Hubungi panitia jika perlu perubahan data. @endif</span>
+            <span class="small"><strong>Pendaftaran terkunci.</strong>
+                @if($registrationClosed) Pengisian dan pengajuan sudah ditutup.
+                @elseif($reg->status === 'Menunggu Verifikasi') Data sedang diperiksa admin.
+                @else Hubungi panitia jika perlu perubahan data. @endif
+            </span>
         </div>
         @else
         <button type="button" class="btn btn-green fw-bold btn-lg px-5" id="btnSubmit">
